@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management System v2</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Add any global JS libraries here if needed -->
+</head>
+<body>
+    <header>
+        <h1>Clinic Management System v2</h1>
+        <nav>
+            <% if (locals.currentUser) { %>
+                <span class="welcome-msg">Welcome, <%= currentUser.name %>! (<%= currentUser.role %>)</span>
+                <% if (currentUser.role === 'ADMIN' && currentUser.clinicName) { %>
+                     <span><%= currentUser.clinicName %></span>
+                 <% } %>
+
+                <% if (currentUser.role === 'ADMIN') { %>
+                     <a href="/admin/dashboard">Appointments</a>
+                     <a href="/admin/tasks">Admin Tasks</a>
+                     <a href="/admin/supplies">Supplies</a>
+                     <!-- <a href="/admin/network">Network Opt.</a> -->
+                 <% } else { %>
+                    <a href="/user/dashboard">My Appointments</a>
+                    <a href="/user/book">Book Appointment</a>
+                 <% } %>
+                <a href="/logout" class="logout-link">Logout</a>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } %>
+        </nav>
+    </header>
+    <main>
+        <% if (locals.message) { %>
+            <div class="message <%= message.type %>">
+                <p><%= message.text %></p>
+                <% if (message.details) { %>
+                    <pre class="message-details"><%= message.details %></pre>
+                <% } %>
+            </div>
+        <% } %>

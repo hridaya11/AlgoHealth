@@ -1,0 +1,66 @@
+<%- include('../partials/header') %>
+
+<div class="results-container">
+    <h2>Job Sequencing Results (Batch A)</h2>
+    <a href="/admin/tasks">&larr; Back to Task Management</a>
+
+    <h3>Optimal Task Schedule</h3>
+    <% if (scheduledTasks && scheduledTasks.length > 0) { %>
+        <p><strong>Total Profit Achieved:</strong> <%= totalProfit %></p>
+         <div class="table-responsive">
+             <table>
+                 <thead>
+                     <tr>
+                         <th>Order</th>
+                         <th>ID</th>
+                         <th>Description</th>
+                         <th>Duration</th>
+                         <th>Deadline</th>
+                         <th>Profit</th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     <% scheduledTasks.forEach((task, index) => { %>
+                         <tr>
+                             <td><%= index + 1 %></td>
+                             <td><%= task.id %></td>
+                             <td><%= task.description %></td>
+                             <td><%= task.duration %></td>
+                             <td><%= task.deadline %></td>
+                             <td><%= task.profit %></td>
+                         </tr>
+                     <% }) %>
+                 </tbody>
+             </table>
+         </div>
+
+         <h3>Gantt Chart (Conceptual)</h3>
+         <div class="gantt-chart">
+              <% if (gantt && gantt?.length > 0) { %>
+                  <% const maxTime = gantt[gantt.length - 1].endTime; %>
+                   <div class="gantt-timeline" style="position: relative; height: <%= gantt.length * 35 %>px; border-left: 1px solid #ccc; margin-top: 10px;">
+                        <!-- Draw Tasks -->
+                        <% gantt.forEach((task, index) => { %>
+                           <div class="gantt-bar" title="<%= task.description %> (Start: <%= task.startTime %>, End: <%= task.endTime %>)"
+                                style="position: absolute;
+                                       left: <%= (task.startTime / maxTime) * 100 %>%;
+                                       width: <%= (task.duration / maxTime) * 100 %>%;
+                                       top: <%= index * 35 %>px;
+                                       height: 30px;">
+                                Task <%= task.id %> (<%= task.duration %>)
+                           </div>
+                       <% }) %>
+                   </div>
+                   <p><em>Note: Gantt chart shows sequential execution based on optimal selection. X-axis represents time units.</em></p>
+             <% } else { %>
+                 <p>Gantt chart data not available.</p>
+             <% } %>
+         </div>
+
+
+    <% } else { %>
+        <p class="no-data-message">No tasks could be scheduled based on the defined constraints.</p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

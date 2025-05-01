@@ -1,0 +1,73 @@
+<%- include('../partials/header') %>
+
+<div class="booking-container">
+    <h2>Book a New Appointment</h2>
+
+    <% if (clinics && clinics.length > 0) { %>
+        <form action="/user/book" method="POST" id="bookingForm" class="booking-form">
+            <div class="booking-step">
+                <label for="clinicAdminId">1. Select Clinic:</label>
+                <select id="clinicAdminId" name="clinicAdminId" required>
+                    <option value="">-- Select a Clinic --</option>
+                    <% clinics.forEach(clinic => { %>
+                        <option value="<%= clinic.id %>" <%= (locals.selectedClinicId == clinic.id) ? 'selected' : '' %>>
+                            <%= clinic.clinicName %> (Admin: <%= clinic.name %>)
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="booking-step">
+                 <label for="appointmentDate">2. Select Date:</label>
+                 <% const today = new Date().toISOString().split('T')[0]; %>
+                 <input type="date" id="appointmentDate" name="appointmentDate" required min="<%= today %>" value="<%= locals.selectedDate %>">
+            </div>
+
+             <div class="booking-step">
+                <label>3. Select Slot Finding Method:</label>
+                 <div class="radio-group">
+                     <input type="radio" id="method1" name="searchMethod" value="method1" checked>
+                     <label for="method1">Method 1 (Standard)</label>
+                     <input type="radio" id="method2" name="searchMethod" value="method2">
+                     <label for="method2">Method 2 (Set-based)</label>
+                 </div>
+                <button type="button" id="findSlotsButton" class="button secondary-button">Find Available Slots</button>
+                 <div id="slotSearchTime" class="search-time-info"></div>
+             </div>
+
+
+            <div class="booking-step">
+                <label for="appointmentSlot">4. Select Available Time Slot:</label>
+                <select id="appointmentSlot" name="appointmentSlot" required disabled>
+                    <option value="">-- Select Date and Find Slots --</option>
+                    <!-- Slots will be populated by JavaScript -->
+                </select>
+                 <div id="slotsLoading" style="display: none;">Loading slots...</div>
+                 <div id="slotsError" class="error-message" style="display: none;"></div>
+            </div>
+
+             <div class="booking-step">
+                 <label for="priority">5. Priority:</label>
+                 <select id="priority" name="priority" required>
+                     <% priorities.forEach(p => { %>
+                        <option value="<%= p %>" <%= p === 'NORMAL' ? 'selected' : '' %>>
+                            <%= p.charAt(0) + p.slice(1).toLowerCase() %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="booking-step">
+                <label for="reason">6. Reason for Visit:</label>
+                <textarea id="reason" name="reason" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" id="submitBookingButton" class="button primary-button" disabled>Book Appointment</button>
+        </form>
+    <% } else { %>
+        <p class="no-data-message">Sorry, no clinics are available for booking at the moment.</p>
+    <% } %>
+</div>
+
+<script src="/js/booking.js"></script>
+<%- include('../partials/footer') %>

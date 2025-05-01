@@ -1,0 +1,68 @@
+<%- include('partials/header') %>
+
+<div class="auth-container">
+    <h2>Register</h2>
+    <form action="/register" method="POST" class="auth-form" id="registerForm">
+        <div>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="password">Password (min 6 chars):</label>
+            <input type="password" id="password" name="password" required minlength="6">
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6">
+        </div>
+        <div>
+            <label for="role">Register as:</label>
+            <select id="role" name="role" onchange="toggleClinicName()">
+                <option value="USER" selected>Patient (User)</option>
+                <option value="ADMIN">Clinic (Admin)</option>
+            </select>
+        </div>
+        <div id="clinicNameDiv" style="display: none;">
+            <label for="clinicName">Clinic Name:</label>
+            <input type="text" id="clinicName" name="clinicName">
+        </div>
+        <button type="submit">Register</button>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </form>
+</div>
+
+<script>
+    function toggleClinicName() {
+        const role = document.getElementById('role').value;
+        const clinicNameDiv = document.getElementById('clinicNameDiv');
+        const clinicNameInput = document.getElementById('clinicName');
+        if (role === 'ADMIN') {
+            clinicNameDiv.style.display = 'block';
+            clinicNameInput.required = true; // Make required when visible
+        } else {
+            clinicNameDiv.style.display = 'none';
+            clinicNameInput.required = false; // Not required when hidden
+            clinicNameInput.value = ''; // Clear value when hidden
+        }
+    }
+    // Initial call in case the page loads with ADMIN selected (e.g., browser back button)
+    toggleClinicName();
+
+     // Basic client-side password match check
+     const form = document.getElementById('registerForm');
+     const password = document.getElementById('password');
+     const confirmPassword = document.getElementById('confirmPassword');
+     form.addEventListener('submit', function(event) {
+         if (password.value !== confirmPassword.value) {
+             alert('Passwords do not match!');
+             event.preventDefault(); // Prevent form submission
+         }
+     });
+
+</script>
+
+<%- include('partials/footer') %>

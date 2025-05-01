@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+    <h2>My Appointments</h2>
+
+    <% if (appointments.length > 0) { %>
+         <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Clinic</th>
+                        <th>Doctor/Admin</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% appointments.forEach(appt => { %>
+                         <tr class="status-<%= appt.status.toLowerCase() %>">
+                            <td><%= new Date(appt.startTime).toLocaleString() %></td>
+                            <td><%= new Date(appt.endTime).toLocaleString() %></td>
+                            <td><%= appt.clinicAdmin.clinicName %></td>
+                            <td><%= appt.clinicAdmin.name %></td>
+                            <td><%= appt.reason %></td>
+                            <td><%= appt.status.charAt(0) + appt.status.slice(1).toLowerCase() %></td>
+                            <td>
+                                <% if (appt.status === 'SCHEDULED') { %>
+                                    <form action="/user/appointments/<%= appt.id %>/cancel" method="POST" onsubmit="return confirm('Are you sure you want to cancel this appointment?');" style="display: inline;">
+                                        <button type="submit" class="button-link">Cancel</button>
+                                    </form>
+                                <% } else { %>
+                                    -
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+         </div>
+    <% } else { %>
+        <p class="no-data-message">You have no appointments scheduled. <a href="/user/book">Book one now!</a></p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

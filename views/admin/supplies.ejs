@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<div class="feature-container">
+    <h2>Supply Budget Allocation (Fractional Knapsack Demo)</h2>
+    <p>Define supply items with cost and clinical value. The algorithm suggests allocation based on value/cost ratio within a budget.</p>
+
+     <div class="form-and-list-container">
+        <div class="form-section">
+            <h3>Add New Supply Item</h3>
+            <form action="/admin/supplies" method="POST" class="data-entry-form">
+                 <div>
+                    <label for="name">Item Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                 <div>
+                    <label for="cost">Cost (Weight):</label>
+                    <input type="number" id="cost" name="cost" required min="0.01" step="0.01">
+                </div>
+                 <div>
+                    <label for="value">Clinical Value:</label>
+                    <input type="number" id="value" name="value" required min="0">
+                </div>
+                <button type="submit">Add Item</button>
+            </form>
+
+            <hr>
+
+            <h3>Set Budget & Calculate</h3>
+            <form action="/admin/supplies" method="GET" class="budget-form">
+                 <div>
+                     <label for="budget">Budget Capacity:</label>
+                     <input type="number" id="budget" name="budget" required min="1" step="any" value="<%= budget %>">
+                 </div>
+                 <button type="submit">Update Budget & Calculate Allocation</button>
+            </form>
+        </div>
+
+
+         <div class="list-section">
+             <h3>Existing Supply Items</h3>
+            <% if (items.length > 0) { %>
+                 <div class="table-responsive">
+                     <table>
+                         <thead>
+                             <tr>
+                                 <th>Name</th>
+                                 <th>Cost</th>
+                                 <th>Value</th>
+                                 <th>Value/Cost Ratio</th>
+                                 <th>Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <% items.forEach(item => { %>
+                                 <tr>
+                                     <td><%= item.name %></td>
+                                     <td><%= item.cost.toFixed(2) %></td>
+                                     <td><%= item.value %></td>
+                                     <td><%= item.ratio ? item.ratio.toFixed(2) : 'N/A' %></td>
+                                     <td>
+                                          <form action="/admin/supplies/<%= item.id %>/delete" method="POST" onsubmit="return confirm('Delete this item?');" style="display: inline;">
+                                             <button type="submit" class="button-link-delete">Delete</button>
+                                         </form>
+                                     </td>
+                                 </tr>
+                             <% }) %>
+                         </tbody>
+                     </table>
+                 </div>
+            <% } else { %>
+                 <p class="no-data-message">No supply items defined yet.</p>
+            <% } %>
+
+            <hr>
+
+             <h3>Knapsack Allocation Result (Budget: <%= budget.toFixed(2) %>)</h3>
+              <% if (allocationResult && allocationResult.length > 0) { %>
+                 <p><strong>Total Value Achieved:</strong> <%= totalValue.toFixed(2) %></p>
+                 <p><strong>Total Cost Used:</strong> <%= totalCost.toFixed(2) %></p>
+                  <div class="table-responsive">
+                     <table>
+                         <thead>
+                             <tr>
+                                 <th>Item Name</th>
+                                 <th>Fraction Taken</th>
+                                 <th>Cost Taken</th>
+                                 <th>Value Gained</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <% allocationResult.forEach(alloc => { %>
+                                 <tr>
+                                     <td><%= alloc.name %></td>
+                                     <td><%= (alloc.fractionTaken * 100).toFixed(1) %>%</td>
+                                     <td><%= alloc.costTaken.toFixed(2) %></td>
+                                     <td><%= alloc.valueTaken.toFixed(2) %></td>
+                                 </tr>
+                             <% }) %>
+                         </tbody>
+                     </table>
+                 </div>
+             <% } else { %>
+                 <p class="no-data-message">No allocation possible with the current items and budget, or no items defined.</p>
+             <% } %>
+
+         </div>
+     </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
+  password     String
+  name         String
+  role         Role    @default(USER) // USER or ADMIN (clinic)
+  clinicName   String? // Only relevant if role is ADMIN
+  createdAt    DateTime @default(now())
+
+  // Relations
+  appointmentsBooked    Appointment[] @relation("PatientAppointments") // Appointments booked by this user (as patient)
+  appointmentsManaged   Appointment[] @relation("ClinicAppointments")  // Appointments managed by this user (as admin/clinic)
+  adminTasks            AdminTask[]      // Tasks managed by admin
+  supplyItems           SupplyItem[]     // Supply items managed by admin
+  clinicNodes           ClinicNode[]     // Nodes defined by admin for MST
+  clinicEdges           ClinicEdge[]     // Edges defined by admin for MST
+}
+
+model Appointment {
+  id              Int       @id @default(autoincrement())
+  patientId       Int
+  clinicAdminId   Int
+  startTime       DateTime  // Specific start time
+  endTime         DateTime  // Specific end time
+  reason          String
+  status          AppointmentStatus @default(SCHEDULED) // SCHEDULED, COMPLETED, CANCELLED
+  priority        PriorityLevel     @default(NORMAL)   // For Priority Queue simulation (Admin Dashboard)
+  estimatedDuration Int             // In minutes, derived from start/end time potentially, but keeping for SJF sort
+  createdAt       DateTime  @default(now())
+
+  patient       User @relation("PatientAppointments", fields: [patientId], references: [id])
+  clinicAdmin   User @relation("ClinicAppointments", fields: [clinicAdminId], references: [id])
+
+  @@index([patientId])
+  @@index([clinicAdminId])
+  @@index([startTime]) // Index start time for availability checks
+}
+
+// --- New Models for Algorithm Features ---
+
+// For Job Sequencing (Batch A)
+model AdminTask {
+  id          Int      @id @default(autoincrement())
+  description String
+  duration    Int      // Estimated time in minutes
+  deadline    Int      // Arbitrary unit (e.g., day number, hour number)
+  profit      Int      // Importance / Value
+  createdAt   DateTime @default(now())
+  adminId     Int
+  admin       User     @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+}
+
+// For Fractional Knapsack (Batch D)
+model SupplyItem {
+  id          Int      @id @default(autoincrement())
+  name        String
+  cost        Float    // Weight
+  value       Float    // Value
+  createdAt   DateTime @default(now())
+  adminId     Int
+  admin       User     @relation(fields: [adminId], references: [id])
+
+  @@index([adminId])
+}
+
+// For MST Algorithms (Batch B & C)
+model ClinicNode {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // Node name (e.g., 'Reception', 'Lab') within an admin's context
+  createdAt   DateTime @default(now())
+  adminId     Int
+  admin       User     @relation(fields: [adminId], references: [id])
+  edgesA      ClinicEdge[] @relation("NodeA") // Edges where this node is Node A
+  edgesB      ClinicEdge[] @relation("NodeB") // Edges where this node is Node B
+
+  @@index([adminId])
+}
+
+model ClinicEdge {
+  id          Int      @id @default(autoincrement())
+  nodeAId     Int
+  nodeBId     Int
+  cost        Float    // Cost/distance/weight of the connection
+  createdAt   DateTime @default(now())
+  adminId     Int
+  admin       User     @relation(fields: [adminId], references: [id])
+  nodeA       ClinicNode @relation("NodeA", fields: [nodeAId], references: [id])
+  nodeB       ClinicNode @relation("NodeB", fields: [nodeBId], references: [id])
+
+  @@index([adminId])
+  @@index([nodeAId])
+  @@index([nodeBId])
+  // Ensure a node pair is unique per admin to avoid duplicate edges
+  @@unique([adminId, nodeAId, nodeBId])
+}
+
+
+// --- Enums ---
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum PriorityLevel {
+  LOW
+  NORMAL
+  HIGH
+  CRITICAL
+}

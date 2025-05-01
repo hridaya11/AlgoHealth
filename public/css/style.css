@@ -1,0 +1,379 @@
+/* --- Global Styles --- */
+:root {
+    --primary-color: #0779e4;
+    --secondary-color: #4CAF50;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --grey-color: #6c757d;
+    --border-color: #dee2e6;
+    --background-color: #f4f4f4;
+    --text-color: #333;
+    --link-color: var(--primary-color);
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 5px;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background: var(--dark-color);
+    color: var(--light-color);
+    padding: 0.8rem 0;
+    border-bottom: var(--primary-color) 4px solid;
+}
+
+header h1 {
+    text-align: center;
+    margin: 0;
+    padding-bottom: 0.5rem;
+    font-size: 1.8em;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    background: #444;
+    padding: 0.6rem;
+    gap: 1rem; /* Spacing between nav items */
+}
+
+nav a {
+    color: var(--light-color);
+    padding: 0.3rem 0.8rem;
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+}
+nav span {
+     color: #ccc;
+     padding: 0.3rem 0.8rem;
+     align-self: center; /* Align vertically */
+}
+nav .welcome-msg { font-weight: bold; }
+nav .logout-link { background-color: var(--danger-color); }
+nav .logout-link:hover { background-color: #c82333; }
+
+nav a:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+main {
+    padding: 25px;
+    max-width: 1200px; /* Wider max-width for complex layouts */
+    margin: 25px auto;
+    background: #fff;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    flex-grow: 1; /* Make main content area grow */
+}
+
+footer {
+    text-align: center;
+    margin-top: auto; /* Push footer to bottom */
+    padding: 15px;
+    background: var(--dark-color);
+    color: var(--light-color);
+    font-size: 0.9em;
+}
+
+/* --- Forms --- */
+.auth-container, .booking-container, .feature-container, .dashboard-container, .results-container, .error-container {
+    padding: 20px;
+}
+.auth-form, .booking-form, .data-entry-form, .budget-form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--light-color);
+}
+.data-entry-form { margin: 0 0 20px 0; } /* No auto margin for inline forms */
+.budget-form { margin-top: 15px; }
+
+.auth-form div, .booking-form div, .data-entry-form div, .budget-form div {
+    margin-bottom: 18px;
+}
+.booking-step {
+    border-left: 3px solid var(--primary-color);
+    padding-left: 15px;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    box-sizing: border-box;
+    font-size: 1em;
+}
+input:focus, select:focus, textarea:focus {
+     border-color: var(--primary-color);
+     box-shadow: 0 0 0 2px rgba(7, 121, 228, 0.25);
+     outline: none;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resize */
+    min-height: 80px;
+}
+
+/* Buttons */
+.button, button {
+    display: inline-block;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1em;
+    font-family: inherit;
+    transition: background-color 0.3s ease;
+    margin-right: 5px; /* Spacing between buttons */
+}
+button:hover, .button:hover {
+    background: #055aab;
+}
+button:disabled, .button.disabled {
+    background-color: var(--grey-color);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.button.secondary-button { background-color: var(--secondary-color); }
+.button.secondary-button:hover { background-color: #45a049; }
+
+.button-link { /* For actions mimicking links but needing forms */
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.button-link:hover { color: #a71d2a; text-decoration: none; }
+
+.button-link-delete {
+     background: none;
+     border: 1px solid var(--danger-color);
+     color: var(--danger-color);
+     padding: 3px 8px;
+     border-radius: var(--border-radius);
+     cursor: pointer;
+     font-size: 0.9em;
+}
+.button-link-delete.tiny { font-size: 0.8em; padding: 2px 5px;}
+.button-link-delete:hover { background-color: var(--danger-color); color: white; }
+
+.action-button { margin: 10px 0; }
+
+/* --- Tables --- */
+.table-responsive {
+    overflow-x: auto; /* Allow horizontal scroll on small screens */
+    margin-top: 20px;
+     border: 1px solid var(--border-color);
+     border-radius: var(--border-radius);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid var(--border-color);
+    padding: 12px 15px; /* More padding */
+    text-align: left;
+    vertical-align: middle; /* Align content vertically */
+}
+th {
+    background-color: #e9ecef;
+    font-weight: bold;
+    color: #495057;
+}
+tbody tr:nth-child(even) {
+    background-color: var(--light-color);
+}
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+td form { margin: 0; } /* Remove margin from forms inside table cells */
+
+/* Appointment Status Highlighting */
+.status-scheduled { /* Default, no special style */ }
+.status-completed { background-color: #d4edda; } /* Light green */
+.status-cancelled { background-color: #f8d7da; text-decoration: line-through; color: var(--grey-color)} /* Light red */
+
+/* --- Messages & Feedback --- */
+.message {
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-weight: bold;
+}
+.message p { margin: 0; }
+.message-details {
+    font-size: 0.9em;
+    text-align: left;
+    white-space: pre-wrap;
+    background-color: rgba(0,0,0,0.05);
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: var(--border-radius);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.message.success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+.message.error { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+.message.info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+.message.warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+
+.error-message { color: var(--danger-color); font-size: 0.9em; margin-top: 5px; }
+.no-data-message { color: var(--grey-color); font-style: italic; margin: 20px 0; }
+
+/* --- Admin Dashboard Controls --- */
+.controls {
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: var(--border-radius);
+}
+.search-sort-form {
+    display: flex;
+    flex-wrap: wrap; /* Wrap on smaller screens */
+    gap: 15px;
+    align-items: center;
+}
+.search-sort-form input[type="text"] { flex-grow: 1; min-width: 200px; }
+.search-sort-form select { padding: 10px; } /* Match input padding */
+.search-sort-form button, .search-sort-form .clear-button { padding: 10px 15px; }
+
+.search-sort-form .clear-button {
+     background-color: var(--grey-color);
+     color: white;
+     text-decoration: none;
+     font-size: 1em; /* Match button size */
+}
+.search-sort-form .clear-button:hover { background-color: #5a6268; }
+.status-update-form select { min-width: 120px; }
+
+/* Priority Colors */
+.priority-critical { color: #dc3545; font-weight: bold; }
+.priority-high { color: #fd7e14; font-weight: bold; }
+.priority-normal { color: inherit; }
+.priority-low { color: var(--grey-color); }
+
+/* --- Layout for Forms + Lists (Tasks, Supplies, Network) --- */
+.form-and-list-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Default to single column */
+    gap: 30px;
+}
+/* On wider screens, use two columns */
+@media (min-width: 992px) {
+    .form-and-list-container {
+        grid-template-columns: 1fr 2fr; /* Form takes 1/3, List takes 2/3 */
+    }
+     .form-and-list-container.network-grid {
+         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Flexible grid for network */
+     }
+     .mst-results { grid-column: 1 / -1; } /* Span full width */
+}
+
+.form-section, .list-section, .results-section {
+    background: #fdfdfd;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+.form-section h3, .list-section h3, .results-section h3 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+.list-section ul { list-style: none; padding: 0; }
+.list-section li { margin-bottom: 10px; padding: 8px; border-bottom: 1px dotted #eee; }
+
+/* --- Booking Page Specific --- */
+#slotsLoading, #slotsError { margin-top: 10px; }
+#slotSearchTime { font-size: 0.85em; color: var(--grey-color); margin-top: 5px; min-height: 1.2em;}
+.radio-group input[type="radio"] { width: auto; margin-right: 5px; }
+.radio-group label { display: inline-block; margin-right: 15px; font-weight: normal; }
+
+/* --- MST Specific --- */
+.network-grid { gap: 20px; }
+.node-form ul { margin-top: 15px; }
+.edge-form select, .edge-form input { margin-bottom: 10px; }
+.mst-result { margin-bottom: 20px; }
+.mst-result h4 { margin-top: 0; color: var(--primary-color); }
+.mst-result ul { list-style: disc; margin-left: 20px; }
+.mst-result li { border-bottom: none; padding: 2px 0; }
+.warning { color: var(--warning-color); font-weight: bold; }
+
+/* --- Gantt Chart Specific (Basic Styling) --- */
+.gantt-chart {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    overflow-x: auto;
+     background: repeating-linear-gradient(
+        to right,
+        #f9f9f9,
+        #f9f9f9 10%, /* Adjust percentage for grid line frequency */
+        #eee 10%,
+        #eee 10.5%
+    );
+}
+.gantt-timeline {
+    position: relative; /* Needed for absolute positioning of bars */
+    min-width: 600px; /* Ensure timeline has some width */
+     background-color: rgba(255, 255, 255, 0.7); /* Slight background to see bars better */
+}
+.gantt-bar {
+    position: absolute;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 3px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 5px;
+    box-sizing: border-box;
+    border: 1px solid #3a8f3d;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+.gantt-bar:hover {
+     background-color: #3a8f3d;
+}
+

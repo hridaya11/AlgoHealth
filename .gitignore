@@ -1,0 +1,36 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# IDE specific files
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Environment files
+.env
+.env.local
+
+# Miscellaneous
+tmp/
+temp/
+bower_components/
+
+# Windows system files
+ehthumbs.db
+Icon?

@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<div class="dashboard-container">
+    <h2>Admin Dashboard - <%= clinicName %></h2>
+    <h3>Manage Appointments</h3>
+
+    <div class="controls">
+        <form action="/admin/dashboard" method="GET" class="search-sort-form">
+            <input type="text" name="search" placeholder="Search Patient Name/Reason" value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" aria-label="Search Appointments">
+
+            <label for="sortBy">Sort By:</label>
+            <select name="sortBy" id="sortBy" onchange="this.form.submit()" aria-label="Sort Appointments By">
+                <option value="priority" <%= sortBy === 'priority' ? 'selected' : '' %>>Priority (PQ)</option>
+                <option value="sjf" <%= sortBy === 'sjf' ? 'selected' : '' %>>Duration (SJF)</option>
+                <option value="startTime" <%= sortBy === 'startTime' || sortBy === 'rr_simulation' ? 'selected' : '' %>>Chronological (RR Sim)</option>
+            </select>
+            <button type="submit">Search/Sort</button>
+            <a href="/admin/dashboard" class="clear-button">Clear</a>
+        </form>
+    </div>
+
+
+    <% if (appointments.length > 0) { %>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Patient</th>
+                        <th>Reason</th>
+                        <th>Duration (min)</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% appointments.forEach(appt => { %>
+                        <tr class="status-<%= appt.status.toLowerCase() %>">
+                            <td><%= new Date(appt.startTime).toLocaleString() %></td>
+                             <td><%= new Date(appt.endTime).toLocaleString() %></td>
+                            <td><%= appt.patient.name %> (<%= appt.patient.email %>)</td>
+                            <td><%= appt.reason %></td>
+                            <% const duration = (new Date(appt.endTime) - new Date(appt.startTime)) / (1000 * 60); %>
+                            <td><%= duration %> min</td>
+                            <td class="priority-<%= appt.priority.toLowerCase() %>"><%= appt.priority %></td>
+                            <td>
+                                <form action="/admin/appointments/<%= appt.id %>/status" method="POST" class="status-update-form">
+                                    <select name="status" onchange="this.form.submit()" aria-label="Update appointment status for <%= appt.patient.name %>">
+                                        <% appointmentStatuses.forEach(stat => { %>
+                                            <option value="<%= stat %>" <%= appt.status === stat ? 'selected' : '' %>>
+                                                <%= stat.charAt(0) + stat.slice(1).toLowerCase() %>
+                                            </option>
+                                        <% }) %>
+                                    </select>
+                                    <noscript><button type="submit">Update</button></noscript>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- Add more actions if needed, e.g., View Details Link -->
+                                <span class="action-info">Update Status Above</span>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    <% } else { %>
+        <p class="no-data-message">No appointments found matching your criteria.</p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

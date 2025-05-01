@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<div class="feature-container">
+    <h2>Manage Administrative Tasks (Job Sequencing Demo)</h2>
+    <p>Define tasks with estimated duration, deadline (relative time units), and profit (importance).</p>
+
+    <div class="form-and-list-container">
+        <div class="form-section">
+            <h3>Add New Task</h3>
+            <form action="/admin/tasks" method="POST" class="data-entry-form">
+                <div>
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                </div>
+                 <div>
+                    <label for="duration">Duration (units, e.g., mins):</label>
+                    <input type="number" id="duration" name="duration" required min="1">
+                </div>
+                 <div>
+                    <label for="deadline">Deadline (time unit):</label>
+                    <input type="number" id="deadline" name="deadline" required min="1">
+                </div>
+                 <div>
+                    <label for="profit">Profit/Importance:</label>
+                    <input type="number" id="profit" name="profit" required min="1">
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h3>Existing Tasks</h3>
+            <% if (tasks.length > 0) { %>
+                 <a href="/admin/tasks/schedule" class="button action-button">Run Job Sequencing Algorithm</a>
+                 <div class="table-responsive">
+                     <table>
+                         <thead>
+                             <tr>
+                                 <th>Description</th>
+                                 <th>Duration</th>
+                                 <th>Deadline</th>
+                                 <th>Profit</th>
+                                 <th>Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <% tasks.forEach(task => { %>
+                                 <tr>
+                                     <td><%= task.description %></td>
+                                     <td><%= task.duration %></td>
+                                     <td><%= task.deadline %></td>
+                                     <td><%= task.profit %></td>
+                                     <td>
+                                         <form action="/admin/tasks/<%= task.id %>/delete" method="POST" onsubmit="return confirm('Delete this task?');" style="display: inline;">
+                                             <button type="submit" class="button-link-delete">Delete</button>
+                                         </form>
+                                     </td>
+                                 </tr>
+                             <% }) %>
+                         </tbody>
+                     </table>
+                 </div>
+            <% } else { %>
+                <p class="no-data-message">No tasks defined yet. Add some tasks to run the scheduler.</p>
+                 <a href="/admin/tasks/schedule" class="button action-button disabled">Run Job Sequencing Algorithm</a>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

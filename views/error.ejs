@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+<div class="error-container">
+    <h1>Error <%= locals.error?.status || 500 %></h1>
+    <p><%= locals.error?.message || 'An unexpected error occurred.' %></p>
+    <% if (locals.NODE_ENV !== 'production' && locals.error?.stack) { %>
+        <h2>Stack Trace:</h2>
+        <pre><%= error.stack %></pre>
+    <% } %>
+    <a href="javascript:history.back()">Go Back</a> or <a href="/">Go to Homepage</a>
+</div>
+<%- include('partials/footer') %>
