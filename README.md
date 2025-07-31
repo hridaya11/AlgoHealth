@@ -1,4 +1,4 @@
-# Clinic Management System
+# AlgoHealth -Clinic Management System
 
 A comprehensive clinic management system built with Node.js, Express, and Prisma. This system implements various scheduling and optimization algorithms to efficiently manage clinic appointments and resources.
 
